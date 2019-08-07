@@ -1,12 +1,11 @@
-{
-    "name": "Background",
-    "permissions" : ["http://*/*", "https://*/*"],
-    "version": "1.0",
-    "content_scripts": [{
-        "matches": ["http://*/*", "https://*/*"],
-        "js": ["script.js"],
-        "all_frames": false,
-        "run_at": "document_start"
-    }],
-    "manifest_version": 2
-}
+var color = document.documentElement.style.backgroundColor;
+document.documentElement.style.backgroundColor = "black";
+var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.target.nodeName == "BODY") {
+            observer.disconnect();
+            document.documentElement.style.backgroundColor = color || "";
+        }
+    });
+});
+observer.observe(document, { childList: true, subtree: true });
